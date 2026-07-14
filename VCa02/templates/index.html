@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ипотечный калькулятор в стиле барокко</title>
+    <style>
+        /* ---------- Барокко-стиль ---------- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #1a110d;
+            background-image: radial-gradient(circle at 20% 30%, #3d2a1e 0%, #1a110d 70%);
+            color: #e6d5b8;
+            min-height: 100vh;
+            padding: 30px 20px;
+        }
+
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            background: rgba(44, 30, 22, 0.85);
+            backdrop-filter: blur(8px);
+            border: 2px solid #b8860b;
+            border-radius: 40px 12px 40px 12px;
+            padding: 30px 35px 45px;
+            box-shadow: 0 0 50px rgba(184, 134, 11, 0.3), inset 0 0 30px rgba(184, 134, 11, 0.1);
+            position: relative;
+        }
+
+        /* Декоративные элементы */
+        .container::before {
+            content: "⚜";
+            position: absolute;
+            top: -20px;
+            left: 30px;
+            font-size: 40px;
+            color: #b8860b;
+            opacity: 0.3;
+            transform: rotate(-15deg);
+        }
+        .container::after {
+            content: "⚜";
+            position: absolute;
+            bottom: -20px;
+            right: 30px;
+            font-size: 40px;
+            color: #b8860b;
+            opacity: 0.3;
+            transform: rotate(25deg);
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: #d4af37;
+            text-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+            letter-spacing: 6px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #b8860b;
+            padding-bottom: 15px;
+            position: relative;
+        }
+        h1 small {
+            display: block;
+            font-size: 1rem;
+            color: #c9a87a;
+            letter-spacing: 3px;
+            margin-top: 5px;
+        }
+
+        .form-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px 30px;
+            background: rgba(60, 40, 30, 0.4);
+            border: 1px solid #7a5a3a;
+            border-radius: 30px 8px 30px 8px;
+            padding: 25px 30px;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            flex: 1 1 180px;
+            min-width: 150px;
+        }
+        .form-group label {
+            display: block;
+            font-size: 0.9rem;
+            color: #d4af37;
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+            font-weight: bold;
+        }
+        .form-group input[type="number"],
+        .form-group select {
+            width: 100%;
+            padding: 8px 12px;
+            background: #2c1e16;
+            border: 1px solid #7a5a3a;
+            border-radius: 20px 4px 20px 4px;
+            color: #e6d5b8;
+            font-size: 1rem;
+            font-family: 'Georgia', serif;
+            outline: none;
+            transition: 0.3s;
+        }
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: #d4af37;
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
+        }
+        .form-group input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            accent-color: #d4af37;
+            transform: scale(1.1);
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+        .form-group .checkbox-label {
+            display: inline-block;
+            color: #d4af37;
+            font-weight: bold;
+        }
+
+        .early-payment {
+            background: rgba(44, 30, 22, 0.5);
+            border: 1px dashed #7a5a3a;
+            border-radius: 20px 4px 20px 4px;
+            padding: 15px 20px;
+            margin: 15px 0;
+        }
+        .early-payment .row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: flex-end;
+        }
+        .early-payment .row .form-group {
+            flex: 1 1 120px;
+        }
+        .btn {
+            display: inline-block;
+            background: #2c1e16;
+            color: #d4af37;
+            border: 2px solid #b8860b;
+            border-radius: 30px 6px 30px 6px;
+            padding: 12px 30px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            font-family: 'Georgia', serif;
+            cursor: pointer;
+            transition: 0.3s;
+            text-decoration: none;
+            box-shadow: 0 0 15px rgba(184, 134, 11, 0.2);
+            letter-spacing: 1px;
+        }
+        .btn:hover {
+            background: #b8860b;
+            color: #1a110d;
+            box-shadow: 0 0 30px rgba(184, 134, 11, 0.6);
+            transform: scale(1.02);
+        }
+        .btn-primary {
+            background: #d4af37;
+            color: #1a110d;
+            border-color: #d4af37;
+        }
+        .btn-primary:hover {
+            background: #b8860b;
+            border-color: #b8860b;
+            color: #1a110d;
+        }
+
+        .result-area {
+            margin-top: 30px;
+            overflow-x: auto;
+        }
+        .summary {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            background: rgba(60, 40, 30, 0.3);
+            border-radius: 30px 6px 30px 6px;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            border: 1px solid #7a5a3a;
+        }
+        .summary-item {
+            font-size: 1.2rem;
+            color: #e6d5b8;
+        }
+        .summary-item span {
+            color: #d4af37;
+            font-weight: bold;
+            font-size: 1.4rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+            background: rgba(44, 30, 22, 0.5);
+            border-radius: 20px 4px 20px 4px;
+            overflow: hidden;
+            box-shadow: 0 0 30px rgba(0,0,0,0.5);
+        }
+        th {
+            background: #2c1e16;
+            color: #d4af37;
+            padding: 12px 8px;
+            border-bottom: 2px solid #b8860b;
+            font-size: 0.95rem;
+            letter-spacing: 1px;
+            text-align: center;
+        }
+        td {
+            padding: 10px 8px;
+            text-align: center;
+            border-bottom: 1px solid #3d2a1e;
+            color: #e6d5b8;
+        }
+        tr:hover td {
+            background: rgba(212, 175, 55, 0.1);
+        }
+        .highlight {
+            color: #d4af37;
+            font-weight: bold;
+        }
+
+        .download-section {
+            text-align: right;
+            margin-top: 20px;
+        }
+
+        .error {
+            color: #ff6b6b;
+            background: rgba(255,0,0,0.1);
+            padding: 10px 20px;
+            border-radius: 20px 4px 20px 4px;
+            border: 1px solid #ff6b6b;
+            margin: 15px 0;
+        }
+
+        /* Адаптив */
+        @media (max-width: 600px) {
+            .container { padding: 20px 15px; }
+            h1 { font-size: 2rem; }
+            .form-group { flex: 1 1 100%; }
+            .summary-item { font-size: 1rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <h1>🏦 Ипотечный калькулятор <small>в стиле барокко</small></h1>
+
+    <form method="POST" id="calcForm">
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="principal">💰 Сумма кредита (₽)</label>
+                <input type="number" id="principal" name="principal" step="any" min="0" value="{{ principal or '' }}" required>
+            </div>
+            <div class="form-group">
+                <label for="months">📅 Срок (мес.)</label>
+                <input type="number" id="months" name="months" min="1" max="600" value="{{ months or 12 }}" required>
+            </div>
+            <div class="form-group" id="rateGroup">
+                <label for="rate">📊 Годовая ставка (%)</label>
+                <input type="number" id="rate" name="rate" step="any" min="0" value="{{ annual_rate or 0 }}" {% if installment_plan %}disabled style="opacity:0.5;"{% endif %}>
+            </div>
+            <div class="form-group">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="installment_plan" name="installment_plan" {% if installment_plan %}checked{% endif %} onchange="toggleRate()">
+                    🛒 Рассрочка (0%)
+                </label>
+            </div>
+        </div>
+
+        <div style="margin: 10px 0 20px;">
+            <details>
+                <summary style="color:#d4af37; cursor:pointer; font-size:1.1rem;">➕ Досрочные платежи</summary>
+                <div id="earlyPaymentsContainer">
+                    <!-- Динамические поля будут добавлены через JS -->
+                    <div class="early-payment" data-index="0">
+                        <div class="row">
+                            <div class="form-group">
+                                <label>Месяц</label>
+                                <input type="number" name="early_month[]" min="1" step="1" placeholder="3">
+                            </div>
+                            <div class="form-group">
+                                <label>Сумма (₽)</label>
+                                <input type="number" name="early_amount[]" step="any" min="0" placeholder="5000">
+                            </div>
+                            <div class="form-group">
+                                <label>Тип</label>
+                                <select name="early_type[]">
+                                    <option value="payment">Уменьшить платёж</option>
+                                    <option value="term">Уменьшить срок</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button type="button" class="btn" style="padding:5px 20px; font-size:0.9rem;" onclick="addEarlyPayment()">➕ Добавить ещё</button>
+            </details>
+        </div>
+
+        <div style="text-align: center; margin: 20px 0 10px;">
+            <button type="submit" class="btn btn-primary">📊 Рассчитать</button>
+        </div>
+    </form>
+
+    {% if error %}
+        <div class="error">{{ error }}</div>
+    {% endif %}
+
+    {% if schedule %}
+    <div class="result-area">
+        <div class="summary">
+            <div class="summary-item">💵 Общий платёж: <span>{{ total_payment }}</span> ₽</div>
+            <div class="summary-item">📈 Переплата: <span>{{ total_interest }}</span> ₽</div>
+            <div class="summary-item">📆 Срок: <span>{{ months }}</span> мес.</div>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Месяц</th>
+                    <th>Остаток на начало</th>
+                    <th>Платёж</th>
+                    <th>Проценты</th>
+                    <th>Основной долг</th>
+                    <th>Остаток на конец</th>
+                    <th>Досрочный платёж</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in schedule %}
+                <tr>
+                    <td>{{ item.month }}</td>
+                    <td>{{ item.balance_start }}</td>
+                    <td>{{ item.payment }}</td>
+                    <td>{{ item.interest }}</td>
+                    <td>{{ item.principal }}</td>
+                    <td>{{ item.balance_end }}</td>
+                    <td>{% if item.early_payment %}<span class="highlight">{{ item.early_payment }}</span>{% else %}—{% endif %}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="download-section">
+            <a href="{{ url_for('download_excel', principal=principal, months=months, rate=annual_rate, installment_plan=installment_plan, early_payments=early_payments|tojson) }}" class="btn" target="_blank">📥 Скачать Excel</a>
+        </div>
+    </div>
+    {% endif %}
+
+</div>
+
+<script>
+    // Скрываем/показываем поле процентной ставки при включении "Рассрочка"
+    function toggleRate() {
+        const rateInput = document.getElementById('rate');
+        const isChecked = document.getElementById('installment_plan').checked;
+        rateInput.disabled = isChecked;
+        if (isChecked) {
+            rateInput.style.opacity = '0.5';
+            rateInput.value = '0';
+        } else {
+            rateInput.style.opacity = '1';
+        }
+    }
+
+    // Добавление блока досрочного платежа
+    function addEarlyPayment() {
+        const container = document.getElementById('earlyPaymentsContainer');
+        const count = container.children.length;
+        const newBlock = document.createElement('div');
+        newBlock.className = 'early-payment';
+        newBlock.dataset.index = count;
+        newBlock.innerHTML = `
+            <div class="row">
+                <div class="form-group">
+                    <label>Месяц</label>
+                    <input type="number" name="early_month[]" min="1" step="1" placeholder="3">
+                </div>
+                <div class="form-group">
+                    <label>Сумма (₽)</label>
+                    <input type="number" name="early_amount[]" step="any" min="0" placeholder="5000">
+                </div>
+                <div class="form-group">
+                    <label>Тип</label>
+                    <select name="early_type[]">
+                        <option value="payment">Уменьшить платёж</option>
+                        <option value="term">Уменьшить срок</option>
+                    </select>
+                </div>
+                <button type="button" class="btn" style="padding:5px 15px; font-size:0.8rem; background:#5a3a2a;" onclick="this.parentElement.parentElement.remove()">✖</button>
+            </div>
+        `;
+        container.appendChild(newBlock);
+    }
+
+    // Инициализация: если рассрочка включена, скрыть поле ставки при загрузке
+    document.addEventListener('DOMContentLoaded', function() {
+        toggleRate();
+    });
+</script>
+
+</body>
+</html>
