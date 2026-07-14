@@ -1,0 +1,43 @@
+2026-07-14 16:28:43,179 - __main__ - INFO - Бот запущен
+2026-07-14 16:28:57,103 - __main__ - INFO - Пользователь 457041208 запустил бота
+2026-07-14 16:31:11,192 - __main__ - INFO - Пользователь 457041208 запустил бота
+2026-07-14 16:33:05,570 - __main__ - INFO - Пользователь 457041208 запустил бота
+2026-07-14 16:33:25,336 - __main__ - ERROR - Ошибка при отправке карточки: A request to the Telegram API was unsuccessful. Error code: 400. Description: Bad Request: message caption is too long
+2026-07-14 16:33:25,662 - __main__ - ERROR - Ошибка при отправке карточки: A request to the Telegram API was unsuccessful. Error code: 400. Description: Bad Request: message caption is too long
+2026-07-14 16:33:26,199 - __main__ - ERROR - Ошибка при отправке карточки: A request to the Telegram API was unsuccessful. Error code: 400. Description: Bad Request: message caption is too long
+2026-07-14 16:33:26,509 - __main__ - ERROR - Ошибка при отправке карточки: A request to the Telegram API was unsuccessful. Error code: 400. Description: Bad Request: message caption is too long
+2026-07-14 16:37:06,600 - __main__ - INFO - Бот запущен
+2026-07-14 16:37:29,017 - __main__ - INFO - Пользователь 457041208 запустил бота
+2026-07-14 16:40:48,059 - __main__ - INFO - Бот запущен
+2026-07-14 16:40:49,604 - __main__ - INFO - Пользователь 457041208 запустил бота
+2026-07-14 16:40:49,604 - __main__ - INFO - Пользователь 457041208 запустил бота
+2026-07-14 16:41:07,742 - __main__ - ERROR - Ошибка при отправке фото (скачивание не удалось): A request to the Telegram API was unsuccessful. Error code: 400. Description: Bad Request: message caption is too long
+2026-07-14 16:41:08,718 - __main__ - ERROR - Ошибка при отправке фото (скачивание не удалось): A request to the Telegram API was unsuccessful. Error code: 400. Description: Bad Request: message caption is too long
+2026-07-14 16:41:10,660 - __main__ - ERROR - Ошибка при отправке фото (скачивание не удалось): A request to the Telegram API was unsuccessful. Error code: 400. Description: Bad Request: message caption is too long
+2026-07-14 16:41:11,662 - __main__ - ERROR - Ошибка при отправке фото (скачивание не удалось): A request to the Telegram API was unsuccessful. Error code: 400. Description: Bad Request: message caption is too long
+2026-07-14 16:44:19,811 - __main__ - INFO - Бот запущен
+2026-07-14 16:44:33,162 - __main__ - INFO - Пользователь 457041208 запустил бота
+2026-07-14 16:45:00,381 - __main__ - INFO - Пользователь 457041208 запустил бота
+2026-07-14 16:45:11,776 - __main__ - ERROR - Ошибка при отправке фото (скачивание не удалось): A request to the Telegram API was unsuccessful. Error code: 400. Description: Bad Request: message caption is too long
+2026-07-14 16:53:50,546 - __main__ - INFO - База данных инициализирована
+2026-07-14 16:53:50,547 - __main__ - INFO - Бот запущен
+2026-07-14 16:54:21,017 - __main__ - INFO - Пользователь 457041208 запустил бота
+2026-07-14 16:54:33,187 - __main__ - INFO - Транслитерация: пицца -> pitstsa
+2026-07-14 16:54:33,187 - __main__ - INFO - Попытка 1: запрос к https://www.themealdb.com/api/json/v1/1/search.php?s=pitstsa
+2026-07-14 16:54:33,846 - __main__ - INFO - По запросу 'pitstsa' ничего не найдено
+2026-07-14 16:54:33,847 - __main__ - INFO - Попытка 1: запрос к https://www.themealdb.com/api/json/v1/1/search.php?s=пицца
+2026-07-14 16:54:34,335 - __main__ - INFO - По запросу 'пицца' ничего не найдено
+2026-07-14 16:54:34,335 - __main__ - WARNING - Ничего не найдено для запроса 'пицца'
+2026-07-14 16:55:07,722 - __main__ - INFO - Пользователь 457041208 запустил бота
+2026-07-14 16:55:19,451 - __main__ - INFO - Попытка 1: запрос к https://www.themealdb.com/api/json/v1/1/search.php?s=pizza
+2026-07-14 16:55:19,877 - __main__ - INFO - Найдено 3 рецептов по запросу 'pizza'
+2026-07-14 16:55:22,477 - __main__ - ERROR - Ошибка при отправке фото: A request to the Telegram API was unsuccessful. Error code: 400. Description: Bad Request: message caption is too long
+2026-07-14 16:59:42,488 - __main__ - INFO - База данных инициализирована
+2026-07-14 16:59:42,489 - __main__ - INFO - Бот запущен
+2026-07-14 17:00:08,599 - __main__ - INFO - Пользователь 457041208 запустил бота
+2026-07-14 17:00:18,899 - __main__ - INFO - Транслитерация: пицца -> pizza
+2026-07-14 17:00:18,899 - __main__ - INFO - Попытка 1: запрос к https://www.themealdb.com/api/json/v1/1/search.php?s=pizza
+2026-07-14 17:00:19,636 - __main__ - INFO - Найдено 3 рецептов по запросу 'pizza'
+2026-07-14 17:00:53,697 - __main__ - INFO - Пользователь 457041208 запустил бота
+2026-07-14 17:01:29,035 - __main__ - INFO - Пользователь 457041208 добавил рецепт 53014 с рейтингом 1
+2026-07-14 17:01:32,186 - __main__ - INFO - Пользователь 457041208 запустил бота
