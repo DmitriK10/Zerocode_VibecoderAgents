@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Obsidian Note Analyzer</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f0f2f5;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        header {
+            background: linear-gradient(135deg, #7c3aed, #6d28d9);
+            color: white;
+            padding: 25px 30px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        header h1 {
+            font-size: 28px;
+            font-weight: 700;
+        }
+        header h1 span {
+            opacity: 0.8;
+            font-weight: 300;
+        }
+        .header-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        .btn {
+            padding: 10px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        .btn-primary {
+            background: rgba(255,255,255,0.2);
+            color: white;
+        }
+        .btn-primary:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-1px);
+        }
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .btn-outline {
+            background: transparent;
+            border: 2px solid rgba(255,255,255,0.4);
+            color: white;
+        }
+        .btn-outline:hover {
+            background: rgba(255,255,255,0.1);
+        }
+        .loading-spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .loading-spinner.active { display: inline-block; }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+        .stat-number {
+            font-size: 32px;
+            font-weight: 700;
+            color: #7c3aed;
+        }
+        .stat-label {
+            font-size: 13px;
+            color: #6b7280;
+            margin-top: 5px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+        .card h2 {
+            font-size: 18px;
+            color: #1f2937;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .card h2 .badge {
+            background: #e5e7eb;
+            color: #4b5563;
+            font-size: 12px;
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-weight: 500;
+        }
+
+        .tag-cloud {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .tag {
+            background: #ede9fe;
+            color: #5b21b6;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 14px;
+            transition: all 0.2s;
+            cursor: default;
+        }
+        .tag:hover {
+            transform: scale(1.05);
+            background: #ddd6fe;
+        }
+        .tag .count {
+            opacity: 0.6;
+            font-size: 11px;
+            margin-left: 4px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th {
+            text-align: left;
+            padding: 10px 12px;
+            font-size: 12px;
+            text-transform: uppercase;
+            color: #6b7280;
+            border-bottom: 2px solid #e5e7eb;
+        }
+        td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #f3f4f6;
+            font-size: 14px;
+        }
+        tr:hover td {
+            background: #f9fafb;
+        }
+
+        .search-box {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        .search-box input {
+            flex: 1;
+            padding: 10px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .search-box input:focus {
+            border-color: #7c3aed;
+        }
+        .search-box .btn {
+            background: #7c3aed;
+            color: white;
+            padding: 10px 20px;
+        }
+        .search-box .btn:hover {
+            background: #6d28d9;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #6b7280;
+        }
+        .empty-state .icon {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+
+        .error-msg {
+            background: #fef2f2;
+            color: #dc2626;
+            padding: 12px 16px;
+            border-radius: 8px;
+            border-left: 4px solid #dc2626;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #9ca3af;
+            font-size: 13px;
+        }
+
+        @media (max-width: 640px) {
+            header { flex-direction: column; text-align: center; }
+            header h1 { font-size: 22px; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📊 Obsidian <span>Note Analyzer</span></h1>
+            <div class="header-actions">
+                <div class="loading-spinner" id="spinner"></div>
+                <button class="btn btn-primary" id="refreshBtn" onclick="refreshData()">
+                    🔄 Обновить
+                </button>
+                <button class="btn btn-outline" onclick="toggleSearch()">🔍 Поиск</button>
+            </div>
+        </header>
+
+        <!-- Статистика -->
+        <div class="stats-grid" id="statsGrid">
+            <div class="stat-card"><div class="stat-number" id="totalNotes">—</div><div class="stat-label">Всего заметок</div></div>
+            <div class="stat-card"><div class="stat-number" id="dailyNotes">—</div><div class="stat-label">Ежедневных</div></div>
+            <div class="stat-card"><div class="stat-number" id="uniqueTags">—</div><div class="stat-label">Уникальных тегов</div></div>
+            <div class="stat-card"><div class="stat-number" id="totalLinks">—</div><div class="stat-label">Всего связей</div></div>
+        </div>
+
+        <!-- Поиск -->
+        <div class="card" id="searchCard" style="display:none;">
+            <h2>🔍 Поиск по заметкам</h2>
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Введите текст для поиска..." onkeydown="if(event.key==='Enter') searchNotes()">
+                <button class="btn" onclick="searchNotes()">Найти</button>
+            </div>
+            <div id="searchResults"></div>
+        </div>
+
+        <!-- Основной контент -->
+        <div id="content">
+            <div class="card">
+                <h2>🏷️ Популярные теги</h2>
+                <div class="tag-cloud" id="tagCloud">
+                    <span style="color:#9ca3af;">Загрузка...</span>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>🔗 Внутренние связи <span class="badge">топ-20</span></h2>
+                <table>
+                    <thead><tr><th>Заметка</th><th>Ссылок</th></tr></thead>
+                    <tbody id="linksTable">
+                        <tr><td colspan="2" style="text-align:center;color:#9ca3af;">Загрузка...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="card">
+                <h2>📝 Частота слов <span class="badge">топ-20</span></h2>
+                <table>
+                    <thead><tr><th>Слово</th><th>Количество</th></tr></thead>
+                    <tbody id="wordsTable">
+                        <tr><td colspan="2" style="text-align:center;color:#9ca3af;">Загрузка...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="footer">
+            Obsidian Note Analyzer • Данные из вашего хранилища
+        </div>
+    </div>
+
+    <script>
+        let currentData = null;
+
+        async function refreshData() {
+            const btn = document.getElementById('refreshBtn');
+            const spinner = document.getElementById('spinner');
+            btn.disabled = true;
+            spinner.classList.add('active');
+
+            try {
+                const resp = await fetch('/api/analyze');
+                if (!resp.ok) throw new Error('Ошибка сервера: ' + resp.status);
+                const data = await resp.json();
+                if (data.error) throw new Error(data.error);
+                currentData = data;
+                renderStats(data);
+                renderTags(data);
+                renderLinks(data);
+                renderWords(data);
+            } catch (e) {
+                document.getElementById('tagCloud').innerHTML = `<span class="error-msg">❌ ${e.message}</span>`;
+            } finally {
+                btn.disabled = false;
+                spinner.classList.remove('active');
+            }
+        }
+
+        function renderStats(data) {
+            document.getElementById('totalNotes').textContent = data.total_notes || 0;
+            document.getElementById('dailyNotes').textContent = data.daily_notes_count || 0;
+            document.getElementById('uniqueTags').textContent = Object.keys(data.tags || {}).length;
+            document.getElementById('totalLinks').textContent = Object.keys(data.links || {}).length;
+        }
+
+        function renderTags(data) {
+            const container = document.getElementById('tagCloud');
+            const tags = data.tags || {};
+            const entries = Object.entries(tags);
+            if (entries.length === 0) {
+                container.innerHTML = '<span style="color:#9ca3af;">Теги не найдены</span>';
+                return;
+            }
+            const maxCount = Math.max(...entries.map(([,c]) => c), 1);
+            container.innerHTML = entries.map(([tag, count]) => {
+                const size = 12 + Math.round((count / maxCount) * 16);
+                return `<span class="tag" style="font-size:${size}px">#${tag} <span class="count">${count}</span></span>`;
+            }).join('');
+        }
+
+        function renderLinks(data) {
+            const tbody = document.getElementById('linksTable');
+            const links = data.links || {};
+            const entries = Object.entries(links).slice(0, 20);
+            if (entries.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="2" style="text-align:center;color:#9ca3af;">Связей не найдено</td></tr>';
+                return;
+            }
+            tbody.innerHTML = entries.map(([note, count]) =>
+                `<tr><td>${note}</td><td>${count}</td></tr>`
+            ).join('');
+        }
+
+        function renderWords(data) {
+            const tbody = document.getElementById('wordsTable');
+            const words = data.word_frequency || {};
+            const entries = Object.entries(words)
+                .filter(([,c]) => c > 1)
+                .slice(0, 20);
+            if (entries.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="2" style="text-align:center;color:#9ca3af;">Нет данных</td></tr>';
+                return;
+            }
+            tbody.innerHTML = entries.map(([word, count]) =>
+                `<tr><td>${word}</td><td>${count}</td></tr>`
+            ).join('');
+        }
+
+        let searchVisible = false;
+        function toggleSearch() {
+            searchVisible = !searchVisible;
+            document.getElementById('searchCard').style.display = searchVisible ? 'block' : 'none';
+            if (searchVisible) document.getElementById('searchInput').focus();
+        }
+
+        async function searchNotes() {
+            const query = document.getElementById('searchInput').value.trim();
+            const container = document.getElementById('searchResults');
+            if (!query) {
+                container.innerHTML = '<span style="color:#9ca3af;">Введите текст для поиска</span>';
+                return;
+            }
+            container.innerHTML = '<span style="color:#9ca3af;">Поиск...</span>';
+            try {
+                const resp = await fetch(`/api/search?q=${encodeURIComponent(query)}`);
+                const data = await resp.json();
+                if (data.error) throw new Error(data.error);
+                const results = data.results || [];
+                if (results.length === 0) {
+                    container.innerHTML = '<span style="color:#9ca3af;">Ничего не найдено</span>';
+                    return;
+                }
+                container.innerHTML = results.map(r =>
+                    `<div style="padding:6px 0;border-bottom:1px solid #f3f4f6;">📄 ${r.file} <span style="color:#9ca3af;font-size:13px;">(${r.matches} совпадений)</span></div>`
+                ).join('');
+            } catch (e) {
+                container.innerHTML = `<span class="error-msg">❌ ${e.message}</span>`;
+            }
+        }
+
+        // Автозагрузка
+        refreshData();
+    </script>
+</body>
+</html>

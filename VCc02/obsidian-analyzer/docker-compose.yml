@@ -1,0 +1,59 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: obsidian-backend
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./test_vault:/vault:ro
+    environment:
+      - FLASK_APP=app.py
+      - FLASK_ENV=production
+      - OBSIDIAN_VAULT_PATH=/vault
+      - OPENAI_MODEL=gpt-3.5-turbo-16k
+      - OPENAI_API_BASE=https://proxypi.ru/v1
+      - OPENAI_API_KEY=sk-dummy-key
+    restart: unless-stopped
+    networks:
+      - obsidian-network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: obsidian-frontend
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+    networks:
+      - obsidian-network
+
+  telegram-bot:
+    build:
+      context: ./telegram_bot
+      dockerfile: Dockerfile
+    container_name: obsidian-telegram-bot
+    volumes:
+      - ./test_vault:/vault          # <-- Убрано :ro для записи
+      - ./telegram_bot/state:/app/state
+    environment:
+      - BOT_TOKEN=${BOT_TOKEN}
+      - CHAT_ID=${CHAT_ID}
+      - OBSIDIAN_VAULT_PATH=/vault
+      - CHECK_INTERVAL=${CHECK_INTERVAL:-3600}
+      - STATE_FILE=/app/state/last_run.txt
+    depends_on:
+      - backend
+    restart: unless-stopped
+    networks:
+      - obsidian-network
+
+networks:
+  obsidian-network:
+    driver: bridge
