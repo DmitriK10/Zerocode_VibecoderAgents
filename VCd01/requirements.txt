@@ -1,0 +1,7 @@
+crewai==1.15.10
+crewai-tools>=1.0.0
+python-dotenv==1.2.2
+openai==2.53.0
+ddgs>=9.0.0
+python-telegram-bot>=21.0
+httpx>=0.28.1
