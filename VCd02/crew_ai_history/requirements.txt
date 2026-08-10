@@ -1,0 +1,17 @@
+crewai==1.15.10
+crewai-tools>=1.0.0
+python-dotenv==1.2.2
+openai==2.53.0
+ddgs>=9.0.0
+python-telegram-bot>=21.0
+httpx>=0.28.1
+logtail-python==0.4.0
+
+# Для разработки и тестирования
+pytest>=8.0.0
+pytest-asyncio>=0.23.0
+pytest-cov>=5.0.0
+responses>=0.25.0
+flake8>=7.0.0
+pylint>=3.0.0
+mypy>=1.8.0

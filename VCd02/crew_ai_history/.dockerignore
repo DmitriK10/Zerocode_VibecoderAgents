@@ -1,0 +1,17 @@
+# .dockerignore
+__pycache__
+*.pyc
+*.pyo
+*.md
+*.log
+.env
+.git
+.gitignore
+README.md
+ai_history_review*.md
+seo_result.txt
+custom_result.txt
+venv
+.venv
+.vscode
+.idea

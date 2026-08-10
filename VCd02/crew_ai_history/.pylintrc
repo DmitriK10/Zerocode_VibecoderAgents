@@ -1,0 +1,8 @@
+[MASTER]
+ignore=venv,.venv,build,dist
+
+[MESSAGES CONTROL]
+disable=missing-docstring,too-few-public-methods,fixme
+
+[FORMAT]
+max-line-length=120
